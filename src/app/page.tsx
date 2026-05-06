@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 export default function HomePage() {
   return (
-    <div style={{ minHeight: '100vh', background: '#000' }}>
+    <div style={{ minHeight: '100vh', background: '#000', paddingTop: '56px' }}>
       <Navbar />
 
       {/* Hero */}

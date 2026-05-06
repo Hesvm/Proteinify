@@ -2,7 +2,7 @@ import Navbar from '@/components/Navbar'
 
 export default function AboutPage() {
   return (
-    <div style={{ minHeight: '100vh', background: '#000' }}>
+    <div style={{ minHeight: '100vh', background: '#000', paddingTop: '56px' }}>
       <Navbar />
       <main style={{
         maxWidth: '640px',

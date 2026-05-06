@@ -1,26 +1,44 @@
 'use client'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Menu, X } from 'lucide-react'
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   return (
     <>
       <nav style={{
-        background: '#0d0d0d',
-        height: '56px',
+        // positioning: fixed + centered (floating effect)
+        position: 'fixed',
+        top: scrolled ? '16px' : '0',
+        left: '50%',
+        transform: scrolled ? 'translateX(-50%) scale(0.98)' : 'translateX(-50%)',
+        zIndex: 50,
+        // sizing: shrinks when scrolled
+        width: '100%',
+        maxWidth: scrolled ? '960px' : '1106px',
+        height: scrolled ? '48px' : '56px',
         padding: '10px 18px',
+        // appearance: floats with blur + shadow + rounded corners when scrolled
+        background: scrolled ? 'rgba(13,13,13,0.92)' : '#0d0d0d',
+        backdropFilter: scrolled ? 'blur(12px)' : 'none',
+        borderRadius: scrolled ? '14px' : '0',
+        boxShadow: scrolled ? '0 8px 32px rgba(0,0,0,0.5)' : 'none',
+        // layout
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        maxWidth: '1106px',
-        margin: '42px auto 0',
-        position: 'sticky',
-        top: '0',
-        zIndex: 50,
+        // smooth transitions
+        transition: 'all 0.3s ease-out',
       }}>
         {/* CTA button */}
         <a
@@ -88,11 +106,21 @@ export default function Navbar() {
       {/* Mobile drawer */}
       {menuOpen && (
         <div className="md:hidden" style={{
-          background: '#0d0d0d',
+          position: 'fixed',
+          top: scrolled ? '80px' : '56px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '100%',
+          maxWidth: scrolled ? '960px' : '1106px',
+          background: 'rgba(13,13,13,0.96)',
+          backdropFilter: 'blur(12px)',
+          borderRadius: scrolled ? '0 0 14px 14px' : '0',
           padding: '16px 18px',
           display: 'flex',
           flexDirection: 'column',
           gap: '16px',
+          zIndex: 49,
+          transition: 'all 0.3s ease-out',
         }}>
           <Link href="/about" onClick={() => setMenuOpen(false)} style={{
             color: 'rgba(255,255,255,0.5)',
