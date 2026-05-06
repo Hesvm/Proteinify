@@ -6,41 +6,44 @@ import { Menu, X } from 'lucide-react'
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
+  const [scrollProgress, setScrollProgress] = useState(0) // 0 = top, 1 = fully shrunk
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
+    // Full shrink over 250px of scroll — progressive, not a snap
+    const onScroll = () => setScrollProgress(Math.min(window.scrollY / 250, 1))
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Linear interpolation between default and shrunk values
+  const lerp = (a: number, b: number) => a + (b - a) * scrollProgress
+
   return (
     <>
       <nav style={{
-        // positioning: always fixed + centered
         position: 'fixed',
-        top: scrolled ? '16px' : '0',
+        top: `${lerp(0, 16)}px`,
         left: '50%',
-        transform: 'translateX(-50%)',   // no scale — width does the shrink
+        transform: 'translateX(-50%)',
         zIndex: 50,
-        // width: full-bleed default → content-hug when scrolled
-        width: scrolled ? 'fit-content' : '100%',
-        maxWidth: scrolled ? 'none' : '1106px',
-        // height: constant — never changes
+        // width interpolates from full-bleed → narrow — scroll drives the shrink
+        width: '100%',
+        maxWidth: `${lerp(1106, 520)}px`,
         height: '56px',
-        padding: scrolled ? '10px 16px' : '10px 18px',
-        gap: scrolled ? '20px' : '0',   // space items when fit-content collapses justify-content
-        // appearance: blur + shadow when floating; sharp edges always
-        background: scrolled ? 'rgba(13,13,13,0.92)' : '#0d0d0d',
-        backdropFilter: scrolled ? 'blur(12px)' : 'none',
-        borderRadius: 0,                 // always sharp
-        boxShadow: scrolled ? '0 8px 32px rgba(0,0,0,0.5)' : 'none',
-        // layout
+        padding: `10px ${lerp(18, 16)}px`,
+        gap: `${lerp(30, 30)}px`,   // 30px always — 50% more than old 20px
+        background: `rgba(13,13,13,${lerp(1, 0.92)})`,
+        backdropFilter: scrollProgress > 0 ? `blur(${lerp(0, 12)}px)` : 'none',
+        borderRadius: 0,
+        boxShadow: scrollProgress > 0.05
+          ? `0 8px 32px rgba(0,0,0,${lerp(0, 0.5)})`
+          : 'none',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        // faster — 150ms feels snappy vs 300ms
-        transition: 'all 0.15s ease-out',
+        // no transition on geometry — scroll position drives it directly
+        // tiny transition only for blur/shadow to avoid flicker
+        transition: 'backdrop-filter 0.08s, box-shadow 0.08s',
       }}>
         {/* CTA button */}
         <a
@@ -109,7 +112,7 @@ export default function Navbar() {
       {menuOpen && (
         <div className="md:hidden" style={{
           position: 'fixed',
-          top: scrolled ? '72px' : '56px',  // nav is always 56px tall + 16px top offset when scrolled
+          top: `${56 + lerp(0, 16)}px`,
           left: '50%',
           transform: 'translateX(-50%)',
           width: '100%',
