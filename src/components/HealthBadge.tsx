@@ -5,9 +5,9 @@ export default function HealthBadge({ score }: { score: number }) {
     <div
       className={healthScoreBgColor(score)}
       style={{
-        width: '45px',
-        height: '34px',
-        borderRadius: '11px',
+        width: '36px',
+        height: '27px',
+        borderRadius: '9px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -16,9 +16,9 @@ export default function HealthBadge({ score }: { score: number }) {
     >
       <span style={{
         fontFamily: "'RaviFaNum', sans-serif",
-        fontSize: '18px',
+        fontSize: '14px',
         fontWeight: 700,
-        letterSpacing: '-0.72px',
+        letterSpacing: '-0.56px',
         color: 'white',
       }}>
         {score.toLocaleString('fa-IR')}
