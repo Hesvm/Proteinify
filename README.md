@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# پروتئینیفای (Proteinify)
 
-## Getting Started
+Persian nutrition lookup tool — search and filter 500+ foods by protein, calories, carbs, and health score.
 
-First, run the development server:
+**Stack:** Next.js 16, Tailwind CSS v4, TypeScript, Vercel
+
+---
+
+## Run Locally
 
 ```bash
+# Install dependencies
+npm install
+
+# Copy env file and fill in values
+cp .env.example .env.local
+
+# Add font files to public/fonts/
+# - Ravi-VF.ttf
+# - RaviFaNum-VF.ttf
+# - RaviNoEn-VF.ttf
+# Add logo to public/logo.svg
+
+# Start dev server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Description |
+|---|---|
+| `NEXT_PUBLIC_CTA_URL` | URL for the navbar CTA button ("یه کیلو مرغ برام بخر") |
 
-## Learn More
+## Deploy to Vercel
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# One-command deploy
+npx vercel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Set env var
+vercel env add NEXT_PUBLIC_CTA_URL
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+No build configuration needed — Next.js detects the App Router automatically.
 
-## Deploy on Vercel
+## Assets Required (manual copy)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Before running, place these files:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `public/fonts/Ravi-VF.ttf`
+- `public/fonts/RaviFaNum-VF.ttf`
+- `public/fonts/RaviNoEn-VF.ttf`
+- `public/logo.svg`
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── layout.tsx          # RTL + Persian font setup
+│   ├── page.tsx            # Main food list page
+│   ├── about/page.tsx      # About page
+│   └── globals.css         # Design tokens + fonts
+├── components/
+│   ├── Navbar.tsx
+│   ├── FoodTable.tsx       # Sort, search, filter
+│   ├── FoodRow.tsx         # Desktop row + mobile card
+│   └── HealthBadge.tsx
+├── data/
+│   └── foods.ts            # Food dataset (500 items)
+├── hooks/
+│   └── useStarred.ts       # localStorage star persistence
+└── lib/
+    └── healthScore.ts      # Health score formula
+```

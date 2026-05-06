@@ -1,26 +1,50 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: 'Ravi';
+  src: url('/fonts/Ravi-VF.ttf') format('truetype');
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'RaviFaNum';
+  src: url('/fonts/RaviFaNum-VF.ttf') format('truetype');
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'RaviNoEn';
+  src: url('/fonts/RaviNoEn-VF.ttf') format('truetype');
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-bg: #000000;
+  --color-navbar-bg: #0d0d0d;
+  --color-surface: rgba(255,255,255,0.08);
+  --color-border: rgba(255,255,255,0.10);
+  --color-border-thick: rgba(255,255,255,0.18);
+  --color-text-primary: #ffffff;
+  --color-text-muted: rgba(255,255,255,0.50);
+  --color-accent-red: #e02f44;
+  --color-health-great: #145222;
+  --color-health-good: #165e27;
+  --color-health-ok: #7a6010;
+  --color-health-bad: #7a3a10;
+  --color-health-poor: #7a1010;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: 'RaviFaNum', sans-serif;
+  min-height: 100vh;
+  direction: rtl;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
