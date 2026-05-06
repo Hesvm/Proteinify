@@ -19,10 +19,10 @@ const columns: { key: SortKey; label: string }[] = [
 ]
 
 function SortIcon({ active, dir }: { active: boolean; dir: SortDir }) {
-  if (!active) return <ChevronsUpDown size={12} style={{ color: 'rgba(255,255,255,0.3)' }} />
+  if (!active) return <ChevronsUpDown size={10} style={{ color: 'rgba(255,255,255,0.3)' }} />
   return dir === 'asc'
-    ? <ChevronUp size={12} style={{ color: 'white' }} />
-    : <ChevronDown size={12} style={{ color: 'white' }} />
+    ? <ChevronUp size={10} style={{ color: 'white' }} />
+    : <ChevronDown size={10} style={{ color: 'white' }} />
 }
 
 export default function FoodTable() {
@@ -130,9 +130,9 @@ export default function FoodTable() {
               cursor: 'pointer',
               userSelect: 'none',
               fontFamily: "'RaviFaNum', sans-serif",
-              fontSize: '18px',
-              fontWeight: 500,
-              letterSpacing: '-0.72px',
+              fontSize: '14px',
+              fontWeight: 300,
+              letterSpacing: '-0.56px',
               color: sortKey === col.key ? 'white' : 'rgba(255,255,255,0.5)',
               whiteSpace: 'nowrap',
               justifyContent: col.key === 'healthScore' ? 'flex-end' : 'flex-start',
