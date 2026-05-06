@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { HealthProfileProvider } from '@/context/HealthProfileContext'
 
 const base = process.env.NEXT_PUBLIC_BASE_PATH ?? ''
 
@@ -37,7 +38,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <style dangerouslySetInnerHTML={{ __html: fontFaces }} />
       </head>
       <body style={{ fontFamily: "'RaviFaNum', sans-serif" }}>
-        {children}
+        <HealthProfileProvider>
+          {children}
+        </HealthProfileProvider>
       </body>
     </html>
   )

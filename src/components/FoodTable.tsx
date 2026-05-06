@@ -2,27 +2,41 @@
 import { useState, useMemo } from 'react'
 import { Search, Star, ChevronUp, ChevronDown, ChevronsUpDown } from 'lucide-react'
 import FoodRow from './FoodRow'
+import FilterChips from './FilterChips'
 import { useStarred } from '@/hooks/useStarred'
 import { foods } from '@/data/foods'
 import type { FoodItem } from '@/data/foods'
 
-type SortKey = 'popularity' | 'calories' | 'protein' | 'carbs' | 'proteinConversion' | 'healthScore'
+type SortKey = 'popularity' | 'calories' | 'protein' | 'carbs' | 'proteinConversion' | 'healthScore' | 'gi' | 'satiety'
 type SortDir = 'asc' | 'desc'
 
-const columns: { key: SortKey; label: string }[] = [
-  { key: 'popularity',        label: 'محصول' },
-  { key: 'calories',          label: 'کالری ۱۰۰ گرم' },
-  { key: 'protein',           label: 'پروتئین' },
-  { key: 'carbs',             label: 'کربوهیدرات' },
-  { key: 'proteinConversion', label: 'کانورژن پروتئین' },
-  { key: 'healthScore',       label: 'نمره سلامتی' },
+const columns: { key: SortKey; label: string; width?: string; align?: string }[] = [
+  { key: 'popularity',        label: 'محصول',           width: '0 0 200px' },
+  { key: 'calories',          label: 'کالری ۱۰۰ گرم',  width: '1' },
+  { key: 'protein',           label: 'پروتئین',         width: '1' },
+  { key: 'carbs',             label: 'کربوهیدرات',      width: '1' },
+  { key: 'proteinConversion', label: 'کانورژن',         width: '1' },
+  { key: 'healthScore',       label: 'سلامتی',          width: '0 0 80px',  align: 'flex-end' },
+  { key: 'gi',                label: 'GI',              width: '0 0 60px',  align: 'center' },
+  { key: 'satiety',           label: 'Satiety',         width: '0 0 80px' },
 ]
+
+// Budget header is not sortable — rendered separately
+const BUDGET_HEADER_WIDTH = '0 0 60px'
 
 function SortIcon({ active, dir }: { active: boolean; dir: SortDir }) {
   if (!active) return <ChevronsUpDown size={10} style={{ color: 'rgba(255,255,255,0.3)' }} />
   return dir === 'asc'
     ? <ChevronUp size={10} style={{ color: 'white' }} />
     : <ChevronDown size={10} style={{ color: 'white' }} />
+}
+
+const headerCell = {
+  fontFamily: "'RaviFaNum', sans-serif",
+  fontSize: '14px',
+  fontWeight: 300,
+  letterSpacing: '-0.56px',
+  whiteSpace: 'nowrap' as const,
 }
 
 export default function FoodTable() {
@@ -32,6 +46,7 @@ export default function FoodTable() {
   const [searchOpen, setSearchOpen] = useState(false)
   const [sortKey, setSortKey] = useState<SortKey>('popularity')
   const [sortDir, setSortDir] = useState<SortDir>('asc')
+  const [activeTags, setActiveTags] = useState<string[]>([])   // ← new: filter chip state
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {
@@ -44,6 +59,7 @@ export default function FoodTable() {
 
   const displayed = useMemo(() => {
     let list = [...foods]
+
     if (query.trim()) {
       const q = query.trim().toLowerCase()
       list = list.filter(f => f.name.includes(q) || f.emoji.includes(q))
@@ -51,13 +67,18 @@ export default function FoodTable() {
     if (showStarredOnly) {
       list = list.filter(f => isStarred(f.id))
     }
+    // OR logic: show food if it has ANY of the selected tags
+    if (activeTags.length > 0) {
+      list = list.filter(f => activeTags.some(tag => f.tags.includes(tag)))
+    }
+
     list.sort((a, b) => {
       const va = a[sortKey] as number
       const vb = b[sortKey] as number
       return sortDir === 'asc' ? va - vb : vb - va
     })
     return list
-  }, [query, showStarredOnly, sortKey, sortDir, isStarred])
+  }, [query, showStarredOnly, sortKey, sortDir, isStarred, activeTags])
 
   const buttonStyle = {
     background: 'rgba(255,255,255,0.08)',
@@ -76,6 +97,11 @@ export default function FoodTable() {
 
   return (
     <div style={{ maxWidth: '1091px', margin: '0 auto', padding: '0 18px' }}>
+
+      {/* Filter chips */}
+      <div style={{ marginBottom: '16px' }}>
+        <FilterChips selected={activeTags} onChange={setActiveTags} />
+      </div>
 
       {/* Search + Starred row */}
       <div style={{ display: 'flex', justifyContent: 'flex-start', gap: '9px', marginBottom: '24px' }}>
@@ -118,24 +144,21 @@ export default function FoodTable() {
         borderBottom: '1px solid rgba(255,255,255,0.18)',
       }}>
         <div style={{ width: '36px', flexShrink: 0 }} />
+
         {columns.map(col => (
           <div
             key={col.key}
             onClick={() => handleSort(col.key)}
             style={{
-              flex: col.key === 'popularity' ? '0 0 200px' : col.key === 'healthScore' ? '0 0 80px' : 1,
+              flex: col.width ?? '1',
               display: 'flex',
               alignItems: 'center',
-              gap: '6px',
+              gap: '4px',
               cursor: 'pointer',
               userSelect: 'none',
-              fontFamily: "'RaviFaNum', sans-serif",
-              fontSize: '14px',
-              fontWeight: 300,
-              letterSpacing: '-0.56px',
+              ...headerCell,
               color: sortKey === col.key ? 'white' : 'rgba(255,255,255,0.5)',
-              whiteSpace: 'nowrap',
-              justifyContent: col.key === 'healthScore' ? 'flex-end' : 'flex-start',
+              justifyContent: (col.align ?? 'flex-start') as React.CSSProperties['justifyContent'],
             }}
           >
             {col.key !== 'popularity' && <SortIcon active={sortKey === col.key} dir={sortDir} />}
@@ -143,6 +166,11 @@ export default function FoodTable() {
             {col.key === 'popularity' && <SortIcon active={sortKey === col.key} dir={sortDir} />}
           </div>
         ))}
+
+        {/* Budget — static header, not sortable */}
+        <div style={{ flex: BUDGET_HEADER_WIDTH, ...headerCell, color: 'rgba(255,255,255,0.5)', textAlign: 'center' }}>
+          Budget
+        </div>
       </div>
 
       {/* Rows */}

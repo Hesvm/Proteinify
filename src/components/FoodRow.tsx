@@ -54,6 +54,42 @@ export default function FoodRow({ food, isStarred, onToggleStar, isFirst }: Prop
         <div style={{ flex: '0 0 80px', display: 'flex', justifyContent: 'flex-end' }}>
           <HealthBadge score={food.healthScore} />
         </div>
+        {/* Budget */}
+        <div style={{ flex: '0 0 60px', ...cellData, textAlign: 'center', color: 'rgba(255,255,255,0.6)' }}>
+          {food.budget}
+        </div>
+        {/* GI Index */}
+        <div style={{
+          flex: '0 0 60px',
+          ...cellData,
+          textAlign: 'center',
+          color: food.gi === 0 ? 'rgba(255,255,255,0.35)'
+               : food.gi < 55  ? '#4ade80'
+               : food.gi < 70  ? '#facc15'
+               : '#f87171',
+        }}>
+          {food.gi === 0 ? '—' : food.gi}
+        </div>
+        {/* Satiety */}
+        <div style={{ flex: '0 0 80px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <div style={{
+            flex: 1,
+            height: '4px',
+            background: 'rgba(255,255,255,0.1)',
+            borderRadius: '2px',
+            overflow: 'hidden',
+          }}>
+            <div style={{
+              width: `${food.satiety}%`,
+              height: '100%',
+              background: food.satiety >= 70 ? '#4ade80' : food.satiety >= 40 ? '#facc15' : '#f87171',
+              borderRadius: '2px',
+            }} />
+          </div>
+          <span style={{ ...cellData, fontSize: '12px', color: 'rgba(255,255,255,0.5)', flexShrink: 0 }}>
+            {food.satiety}
+          </span>
+        </div>
       </div>
 
       {/* Mobile card */}
