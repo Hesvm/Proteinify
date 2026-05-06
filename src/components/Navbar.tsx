@@ -17,28 +17,30 @@ export default function Navbar() {
   return (
     <>
       <nav style={{
-        // positioning: fixed + centered (floating effect)
+        // positioning: always fixed + centered
         position: 'fixed',
         top: scrolled ? '16px' : '0',
         left: '50%',
-        transform: scrolled ? 'translateX(-50%) scale(0.98)' : 'translateX(-50%)',
+        transform: 'translateX(-50%)',   // no scale — width does the shrink
         zIndex: 50,
-        // sizing: shrinks when scrolled
-        width: '100%',
-        maxWidth: scrolled ? '960px' : '1106px',
-        height: scrolled ? '48px' : '56px',
-        padding: '10px 18px',
-        // appearance: floats with blur + shadow + rounded corners when scrolled
+        // width: full-bleed default → content-hug when scrolled
+        width: scrolled ? 'fit-content' : '100%',
+        maxWidth: scrolled ? 'none' : '1106px',
+        // height: constant — never changes
+        height: '56px',
+        padding: scrolled ? '10px 16px' : '10px 18px',
+        gap: scrolled ? '20px' : '0',   // space items when fit-content collapses justify-content
+        // appearance: blur + shadow when floating; sharp edges always
         background: scrolled ? 'rgba(13,13,13,0.92)' : '#0d0d0d',
         backdropFilter: scrolled ? 'blur(12px)' : 'none',
-        borderRadius: scrolled ? '14px' : '0',
+        borderRadius: 0,                 // always sharp
         boxShadow: scrolled ? '0 8px 32px rgba(0,0,0,0.5)' : 'none',
         // layout
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        // smooth transitions
-        transition: 'all 0.3s ease-out',
+        // faster — 150ms feels snappy vs 300ms
+        transition: 'all 0.15s ease-out',
       }}>
         {/* CTA button */}
         <a
@@ -107,20 +109,20 @@ export default function Navbar() {
       {menuOpen && (
         <div className="md:hidden" style={{
           position: 'fixed',
-          top: scrolled ? '80px' : '56px',
+          top: scrolled ? '72px' : '56px',  // nav is always 56px tall + 16px top offset when scrolled
           left: '50%',
           transform: 'translateX(-50%)',
           width: '100%',
-          maxWidth: scrolled ? '960px' : '1106px',
+          maxWidth: '1106px',
           background: 'rgba(13,13,13,0.96)',
           backdropFilter: 'blur(12px)',
-          borderRadius: scrolled ? '0 0 14px 14px' : '0',
+          borderRadius: 0,                   // sharp always
           padding: '16px 18px',
           display: 'flex',
           flexDirection: 'column',
           gap: '16px',
           zIndex: 49,
-          transition: 'all 0.3s ease-out',
+          transition: 'all 0.15s ease-out',
         }}>
           <Link href="/about" onClick={() => setMenuOpen(false)} style={{
             color: 'rgba(255,255,255,0.5)',
