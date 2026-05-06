@@ -1,24 +1,5 @@
 @import "tailwindcss";
 
-@font-face {
-  font-family: 'Ravi';
-  src: url('/fonts/Ravi-VF.ttf') format('truetype');
-  font-weight: 100 900;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'RaviFaNum';
-  src: url('/fonts/RaviFaNum-VF.ttf') format('truetype');
-  font-weight: 100 900;
-  font-display: swap;
-}
-@font-face {
-  font-family: 'RaviNoEn';
-  src: url('/fonts/RaviNoEn-VF.ttf') format('truetype');
-  font-weight: 100 900;
-  font-display: swap;
-}
-
 :root {
   --color-bg: #000000;
   --color-navbar-bg: #0d0d0d;
